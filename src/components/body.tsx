@@ -30,8 +30,7 @@ import Definiton from './definition'
 
 const Body = () => {
   const {loading, wordMeaning, notFound} = useGlobalContext()
-  // console.log(wordMeaning)
-  //   console.log(notFound)
+  const {title, message, resolution} = notFound
 
   return (
     <Box>
@@ -128,7 +127,9 @@ const Body = () => {
                           skeletonHeight="4">
                           <HStack alignItems="flex-start" pb="8">
                             <Text as="h3">Synonyms</Text>
-                            <Text as="h3">{synonyms[0]}</Text>
+                            <Text as="h3" color="purple.400">
+                              {synonyms[0]}
+                            </Text>
                           </HStack>
                         </SkeletonText>
                       )}
@@ -141,7 +142,9 @@ const Body = () => {
                           skeletonHeight="4">
                           <HStack alignItems="flex-start" pb="8">
                             <Text as="h3">Antonyms</Text>
-                            <Text as="h3">{antonyms[0]}</Text>
+                            <Text as="h3" color="purple.400">
+                              {antonyms[0]}
+                            </Text>
                           </HStack>
                         </SkeletonText>
                       )}
@@ -158,19 +161,33 @@ const Body = () => {
                 <Divider bgColor="purple.200" height="0.15rem" />
                 <HStack pb={8}>
                   <Text>Source</Text>
-                  <Text as={Link} href={sourceUrls} textDecoration="underline">
+                  <Text
+                    as={Link}
+                    href={sourceUrls}
+                    target="_blank"
+                    textDecoration="underline">
                     {sourceUrls}
+                    <IconButton
+                      aria-label="open-in-new-tab"
+                      bgColor="transparent"
+                      _hover={{
+                        bgColor: 'transparent',
+                      }}
+                      icon={<FiExternalLink />}
+                    />
                   </Text>
-                  <IconButton
-                    aria-label="open-in-new-tab"
-                    bgColor="transparent"
-                    icon={<FiExternalLink />}
-                  />
                 </HStack>
               </SkeletonText>
             </Box>
           )
         })}
+      {wordMeaning.length === 0 && Object.keys(notFound).length > 0 && (
+        <VStack>
+          <Heading>{title}</Heading>
+          <Text as={'h3'}>{message}</Text>
+          <Text as={'h4'}>{resolution}</Text>
+        </VStack>
+      )}
     </Box>
   )
 }
