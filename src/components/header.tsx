@@ -1,7 +1,7 @@
 import {
   Divider,
   Flex,
-  FormControl,
+  // FormControl,
   HStack,
   Icon,
   Select,
@@ -16,14 +16,14 @@ const Header = () => {
     <Flex justifyContent="space-between" pb="8">
       <Icon as={BiBook} boxSize="8" />
       <HStack spacing="4">
-        <FormControl>
-          <Select id="font" aria-label="form">
-            <option value="se">Serif</option>
-            <option value="sa">Sans</option>
-            <option value="mo">Mono</option>
-            <option value="co">Cordana</option>
-          </Select>
-        </FormControl>
+        {/* <FormControl> */}
+        <select title="font">
+          <option value="se">Serif</option>
+          <option value="sa">Sans</option>
+          <option value="mo">Mono</option>
+          <option value="co">Cordana</option>
+        </select>
+        {/* </FormControl> */}
         <Divider orientation="vertical" />
         <Switch size="md" />
         <Icon as={FaMoon} bgColor="transparent" />
