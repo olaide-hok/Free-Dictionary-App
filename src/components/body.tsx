@@ -5,87 +5,172 @@ import {
   Heading,
   HStack,
   IconButton,
-  ListItem,
+  Skeleton,
+  SkeletonText,
+  SkeletonCircle,
   Text,
-  UnorderedList,
+  Link,
   VStack,
 } from '@chakra-ui/react'
 import {BiPlay} from 'react-icons/bi'
 import SearchBar from './searchbar'
-// import ExternalLinkIcon from '@chakra-ui/icons'
 
 import {FiExternalLink} from 'react-icons/fi'
+import {useGlobalContext} from '../context'
+import Definiton from './definition'
+
+// type WordDetails = {
+//   word: string
+//   meaning: []
+//   phonetic?: string
+//   phonetics: []
+//   sourceUrls: []
+//   license: {}
+// }
 
 const Body = () => {
+  const {loading, wordMeaning, notFound} = useGlobalContext()
+  // console.log(wordMeaning)
+  //   console.log(notFound)
+
   return (
     <Box>
-      <SearchBar />
-      <Box>
-        <Flex justifyContent="space-between" pb="8">
-          <VStack alignItems="flex-start">
-            <Heading>Keyboard</Heading>
-            <Text>transcript</Text>
-          </VStack>
+      <Skeleton height="12" isLoaded={!loading} mb="8">
+        <SearchBar />
+      </Skeleton>
+      {wordMeaning.length > 0 &&
+        wordMeaning.map((wordMeanings: any, index: number) => {
+          const {word, phonetic, sourceUrls, meanings} = wordMeanings
 
-          <IconButton
-            aria-label="play-button"
-            border="rounded"
-            bgColor="purple.100"
-            color="purple.500"
-            fontSize="36px"
-            isRound
-            icon={<BiPlay />}
-          />
-        </Flex>
-        <Flex gap="4" pb="8">
-          <Text>noun</Text>
-          <Divider mt="4" />
-        </Flex>
-        <VStack alignItems="flex-start" pb="8">
-          <Text as="h3">Meaning</Text>
-          <UnorderedList pl="8">
-            <ListItem>
-              (etc). A set of keys usedd to operate a typewriter, computer etc
-            </ListItem>
-            <ListItem>
-              A component of many instruments including the piano, organ, and
-              harpischord consiting of usually black and white keys that cause
-              different tones to be produced when struck.
-            </ListItem>
-            <ListItem>
-              A device with keys of a musical keyboard, used to control
-              electronic sound-producing devices which may be built into or
-              separate from the keyboard device.
-            </ListItem>
-          </UnorderedList>
-        </VStack>
-        <HStack alignItems="flex-start" pb="8">
-          <Text as="h3">Synonyms</Text>
-          <Text as="h3">electronic keyboard</Text>
-        </HStack>
-        <Flex gap="4" pb="8">
-          <Text>verb</Text>
-          <Divider mt="4" />
-        </Flex>
-        <VStack alignItems="flex-start" pb="8">
-          <Text as="h3">Meaning</Text>
-          <UnorderedList pl="8">
-            <ListItem>To type on a computer keyboard.</ListItem>
-          </UnorderedList>
-        </VStack>
-        <Divider />
-        <HStack>
-          <Text>Source</Text>
-          <Text textDecoration="underline">
-            https://en.wikitionary.org/wiki/keyboard
-          </Text>
-          <IconButton
-            aria-label="open-in-new-tab"
-            bgColor="transparent"
-            icon={<FiExternalLink />}
-          />
-        </HStack>
-      </Box>
+          return (
+            <Box key={index}>
+              <Flex justifyContent="space-between" pb="8">
+                <VStack alignItems="flex-start">
+                  <SkeletonText
+                    isLoaded={!loading}
+                    noOfLines={2}
+                    spacing="4"
+                    skeletonHeight="6">
+                    <Heading textTransform="capitalize">{word}</Heading>
+                    <Text>{phonetic}</Text>
+                  </SkeletonText>
+                </VStack>
+
+                <SkeletonCircle size="10" isLoaded={!loading}>
+                  <IconButton
+                    aria-label="play-button"
+                    border="rounded"
+                    bgColor="purple.100"
+                    color="purple.500"
+                    fontSize="36px"
+                    isRound
+                    icon={<BiPlay />}
+                  />
+                </SkeletonCircle>
+              </Flex>
+
+              {/* Meanings */}
+
+              {meanings &&
+                meanings.map((meaning: any, index: number) => {
+                  const {antonyms, definitions, partOfSpeech, synonyms} =
+                    meaning
+
+                  return (
+                    <Box key={index}>
+                      {partOfSpeech && (
+                        <SkeletonText
+                          isLoaded={!loading}
+                          noOfLines={1}
+                          skeletonHeight="4">
+                          <Flex gap="4" pb="8">
+                            <Text>{partOfSpeech}</Text>
+                            <Divider
+                              mt="3"
+                              bgColor="purple.200"
+                              height="0.15rem"
+                            />
+                          </Flex>
+                        </SkeletonText>
+                      )}
+                      <VStack alignItems="flex-start" pb="8">
+                        <SkeletonText
+                          isLoaded={!loading}
+                          noOfLines={1}
+                          skeletonHeight="4">
+                          <Text as="h3">Meaning</Text>
+                        </SkeletonText>
+
+                        {definitions &&
+                          definitions.map(
+                            (
+                              definitionn: {definition: String},
+                              index: number
+                            ) => {
+                              const {definition} = definitionn
+
+                              return (
+                                <Definiton
+                                  definition={definition}
+                                  loading={loading}
+                                  key={index}
+                                />
+                              )
+                            }
+                          )}
+                      </VStack>
+
+                      {/* Synonyms */}
+                      {synonyms.length > 0 && (
+                        <SkeletonText
+                          isLoaded={!loading}
+                          noOfLines={1}
+                          skeletonHeight="4">
+                          <HStack alignItems="flex-start" pb="8">
+                            <Text as="h3">Synonyms</Text>
+                            <Text as="h3">{synonyms[0]}</Text>
+                          </HStack>
+                        </SkeletonText>
+                      )}
+
+                      {/* Antonyms  */}
+                      {antonyms.length > 0 && (
+                        <SkeletonText
+                          isLoaded={!loading}
+                          noOfLines={1}
+                          skeletonHeight="4">
+                          <HStack alignItems="flex-start" pb="8">
+                            <Text as="h3">Antonyms</Text>
+                            <Text as="h3">{antonyms[0]}</Text>
+                          </HStack>
+                        </SkeletonText>
+                      )}
+                    </Box>
+                  )
+                })}
+
+              {/* Source */}
+
+              <SkeletonText
+                isLoaded={!loading}
+                noOfLines={1}
+                skeletonHeight="4">
+                <Divider bgColor="purple.200" height="0.15rem" />
+                <HStack pb={8}>
+                  <Text>Source</Text>
+                  <Text as={Link} href={sourceUrls} textDecoration="underline">
+                    {sourceUrls}
+                  </Text>
+                  <IconButton
+                    aria-label="open-in-new-tab"
+                    bgColor="transparent"
+                    icon={<FiExternalLink />}
+                  />
+                </HStack>
+              </SkeletonText>
+            </Box>
+          )
+        })}
     </Box>
   )
 }
