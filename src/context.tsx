@@ -8,11 +8,17 @@ import React, {
 
 const freeDictUrl = 'https://api.dictionaryapi.dev/api/v2/entries/en/'
 
+type NotFound = {
+  title: String
+  resolution: String
+  message: String
+}
+
 type DictionaryContextType = {
   setSearchWord: Function
   loading: Boolean
   wordMeaning: Object[]
-  notFound?: Object
+  notFound: NotFound
 }
 
 const noop = () => {}
@@ -21,7 +27,11 @@ const DictionaryContext = createContext<DictionaryContextType>({
   setSearchWord: noop,
   loading: false,
   wordMeaning: [],
-  notFound: {},
+  notFound: {
+    title: '',
+    message: '',
+    resolution: '',
+  },
 })
 
 interface ChildrenProps {
@@ -32,14 +42,19 @@ const DictionaryProvider = ({children}: ChildrenProps) => {
   const [loading, setLoading] = useState(false)
   const [searchWord, setSearchWord] = useState('keyboard')
   const [wordMeaning, setWordMeaning] = useState([])
-  const [notFound, setNotFound] = useState({})
+  const [notFound, setNotFound] = useState({
+    title: '',
+    message: '',
+    resolution: '',
+  })
 
   const fetchWordMeaning = useCallback(async () => {
     setLoading(true)
     try {
       const response = await fetch(`${freeDictUrl}${searchWord}`)
       const data = await response.json()
-      if (data) {
+
+      if (data.length > 0) {
         setWordMeaning(data)
       } else {
         setWordMeaning([])
