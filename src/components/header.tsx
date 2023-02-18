@@ -1,17 +1,23 @@
 import {
+  // Button,
   Divider,
   Flex,
   // FormControl,
   HStack,
   Icon,
-  Select,
-  Switch,
+  IconButton,
+  // Select,
+  // Switch,
+  useColorMode,
 } from '@chakra-ui/react'
 import React from 'react'
 import {BiBook} from 'react-icons/bi'
-import {FaMoon} from 'react-icons/fa'
+import {FaMoon, FaSun} from 'react-icons/fa'
 
+// {toggleColorMode, colorMode}: any
 const Header = () => {
+  const {toggleColorMode, colorMode} = useColorMode()
+
   return (
     <Flex justifyContent="space-between" pb="8">
       <Icon as={BiBook} boxSize="8" />
@@ -24,9 +30,24 @@ const Header = () => {
           <option value="co">Cordana</option>
         </select>
         {/* </FormControl> */}
-        <Divider orientation="vertical" />
-        <Switch size="md" />
-        <Icon as={FaMoon} bgColor="transparent" />
+        <Divider orientation="vertical" display={{base: 'none'}} />
+
+        {/* <Button onClick={toggleColorMode} bgColor="transparent">
+          <Switch size="md" colorScheme="red" />
+          <Icon
+            as={colorMode === 'light' ? FaSun : FaMoon}
+            bgColor="transparent"
+          />
+        </Button> */}
+
+        <IconButton
+          variant="solid"
+          aria-label="toggle theme"
+          rounded="full"
+          bgColor="transparent"
+          onClick={toggleColorMode}
+          icon={colorMode === 'light' ? <FaSun /> : <FaMoon />}
+        />
       </HStack>
     </Flex>
   )
