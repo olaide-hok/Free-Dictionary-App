@@ -28,6 +28,10 @@ import Definiton from './definition'
 //   license: {}
 // }
 
+const playFn = (src: string) => {
+  new Audio(src).play()
+}
+
 const Body = () => {
   const {loading, wordMeaning, notFound} = useGlobalContext()
   const {title, message, resolution} = notFound
@@ -39,7 +43,15 @@ const Body = () => {
       </Skeleton>
       {wordMeaning.length > 0 &&
         wordMeaning.map((wordMeanings: any, index: number) => {
-          const {word, phonetic, sourceUrls, meanings} = wordMeanings
+          const {word, phonetic, phonetics, sourceUrls, meanings} = wordMeanings
+
+          let srcUrl: string[] = []
+          phonetics.map((audios: {audio: string}) => {
+            if (audios.audio !== '') {
+              srcUrl.push(audios.audio)
+            }
+            return srcUrl
+          })
 
           return (
             <Box key={index}>
@@ -50,22 +62,88 @@ const Body = () => {
                     noOfLines={2}
                     spacing="4"
                     skeletonHeight="6">
-                    <Heading textTransform="capitalize">{word}</Heading>
+                    <Heading
+                      textTransform="capitalize"
+                      fontSize={['2xl', '3xl']}>
+                      {word}
+                    </Heading>
                     <Text>{phonetic}</Text>
                   </SkeletonText>
                 </VStack>
 
-                <SkeletonCircle size="10" isLoaded={!loading}>
-                  <IconButton
-                    aria-label="play-button"
-                    border="rounded"
-                    bgColor="purple.100"
-                    color="purple.500"
-                    fontSize="36px"
-                    isRound
-                    icon={<BiPlay />}
-                  />
-                </SkeletonCircle>
+                {srcUrl.length > 1 ? (
+                  <HStack spacing="4">
+                    <SkeletonCircle size="10" isLoaded={!loading}>
+                      <Box pos="relative">
+                        <IconButton
+                          aria-label="play-button"
+                          border="rounded"
+                          bgColor="purple.100"
+                          color="purple.500"
+                          fontSize="36px"
+                          isRound
+                          icon={<BiPlay />}
+                          type="button"
+                          onClick={() => playFn(srcUrl[0])}
+                        />
+                        <Text
+                          pos="absolute"
+                          top="-9px"
+                          right="-5px"
+                          fontSize="sm">
+                          UK
+                        </Text>
+                      </Box>
+                    </SkeletonCircle>
+                    <SkeletonCircle size="10" isLoaded={!loading}>
+                      <Box pos="relative">
+                        <IconButton
+                          aria-label="play-button"
+                          border="rounded"
+                          bgColor="purple.100"
+                          color="purple.500"
+                          fontSize="36px"
+                          isRound
+                          icon={<BiPlay />}
+                          type="button"
+                          onClick={() => playFn(srcUrl[1])}
+                        />
+                        <Text
+                          pos="absolute"
+                          top="-9px"
+                          right="-5px"
+                          fontSize="sm">
+                          US
+                        </Text>
+                      </Box>
+                    </SkeletonCircle>
+                  </HStack>
+                ) : (
+                  <HStack>
+                    <SkeletonCircle size="10" isLoaded={!loading}>
+                      <Box pos="relative">
+                        <IconButton
+                          aria-label="play-button"
+                          border="rounded"
+                          bgColor="purple.100"
+                          color="purple.500"
+                          fontSize="36px"
+                          isRound
+                          icon={<BiPlay />}
+                          type="button"
+                          onClick={() => playFn(srcUrl[0])}
+                        />
+                        <Text
+                          pos="absolute"
+                          top="-9px"
+                          right="-5px"
+                          fontSize="sm">
+                          US
+                        </Text>
+                      </Box>
+                    </SkeletonCircle>
+                  </HStack>
+                )}
               </Flex>
 
               {/* Meanings */}
@@ -160,12 +238,13 @@ const Body = () => {
                 skeletonHeight="4">
                 <Divider bgColor="purple.200" height="0.15rem" />
                 <HStack pb={8}>
-                  <Text>Source</Text>
+                  <Text fontSize={['sm', 'md']}>Source:</Text>
                   <Text
                     as={Link}
                     href={sourceUrls}
                     target="_blank"
-                    textDecoration="underline">
+                    textDecoration="underline"
+                    fontSize={['sm', 'md']}>
                     {sourceUrls}
                     <IconButton
                       aria-label="open-in-new-tab"
