@@ -22,7 +22,7 @@ const SearchBar = () => {
 
   const searchWordFn = () => {
     setSearchWord(searchWord.current.value)
-    console.log(searchWord.current.value)
+    // console.log(searchWord.current.value)
   }
 
   const handleSubmit = (e: React.FormEvent<HTMLInputElement>): void => {
@@ -36,7 +36,7 @@ const SearchBar = () => {
           <Input
             variant="filled"
             rounded="lg"
-            placeholder="Type here..."
+            placeholder="Type word here..."
             _placeholder={{fontWeight: 'bold'}}
             // onChange={searchWordFn}
             onClick={searchWordFn}
