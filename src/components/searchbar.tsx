@@ -1,6 +1,5 @@
 import {
   FormControl,
-  HStack,
   Input,
   InputGroup,
   InputRightElement,
@@ -18,35 +17,36 @@ const SearchBar = () => {
     if (searchWord.current) {
       searchWord.current.focus()
     }
-  }, [])
+  }, [searchWord?.current?.value])
 
   const searchWordFn = () => {
-    setSearchWord(searchWord.current.value)
-    // console.log(searchWord.current.value)
+    setSearchWord(searchWord.current.value.trim())
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLInputElement>): void => {
+  const handleSubmit = (e: React.FormEvent<HTMLInputElement>) => {
     e.preventDefault()
   }
 
   return (
-    <HStack width="full" pb="12">
-      <FormControl onSubmit={handleSubmit}>
-        <InputGroup maxW="7xl">
-          <Input
-            variant="filled"
-            rounded="lg"
-            placeholder="Type word here..."
-            _placeholder={{fontWeight: 'bold'}}
-            // onChange={searchWordFn}
-            onClick={searchWordFn}
-            ref={searchWord}
-            type="text"
-          />
-          <InputRightElement pointerEvents="none" children={<RiSearchLine />} />
-        </InputGroup>
-      </FormControl>
-    </HStack>
+    <FormControl onSubmit={handleSubmit}>
+      <InputGroup maxW="7xl">
+        <Input
+          variant="filled"
+          rounded="lg"
+          placeholder="Type word here..."
+          _placeholder={{fontWeight: 'bold'}}
+          onClick={() => searchWordFn()}
+          ref={searchWord}
+          type="text"
+          onKeyPress={(e) => {
+            if (e.key === 'Enter') {
+              searchWordFn()
+            }
+          }}
+        />
+        <InputRightElement pointerEvents="none" children={<RiSearchLine />} />
+      </InputGroup>
+    </FormControl>
   )
 }
 
