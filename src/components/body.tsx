@@ -7,17 +7,16 @@ import {
   IconButton,
   Skeleton,
   SkeletonText,
-  SkeletonCircle,
   Text,
   Link,
   VStack,
 } from '@chakra-ui/react'
-import {BiPlay} from 'react-icons/bi'
 import SearchBar from './searchbar'
 
 import {FiExternalLink} from 'react-icons/fi'
 import {useGlobalContext} from '../context'
 import Definiton from './definition'
+import PlayBtn from './playBtn'
 
 // type WordDetails = {
 //   word: string
@@ -27,10 +26,6 @@ import Definiton from './definition'
 //   sourceUrls: []
 //   license: {}
 // }
-
-const playFn = (src: string) => {
-  new Audio(src).play()
-}
 
 const Body = () => {
   const {loading, wordMeaning, notFound} = useGlobalContext()
@@ -73,75 +68,24 @@ const Body = () => {
 
                 {srcUrl.length > 1 ? (
                   <HStack spacing="4">
-                    <SkeletonCircle size="10" isLoaded={!loading}>
-                      <Box pos="relative">
-                        <IconButton
-                          aria-label="play-button"
-                          border="rounded"
-                          bgColor="purple.100"
-                          color="purple.500"
-                          fontSize="36px"
-                          isRound
-                          icon={<BiPlay />}
-                          type="button"
-                          onClick={() => playFn(srcUrl[0])}
-                        />
-                        <Text
-                          pos="absolute"
-                          top="-9px"
-                          right="-5px"
-                          fontSize="sm">
-                          UK
-                        </Text>
-                      </Box>
-                    </SkeletonCircle>
-                    <SkeletonCircle size="10" isLoaded={!loading}>
-                      <Box pos="relative">
-                        <IconButton
-                          aria-label="play-button"
-                          border="rounded"
-                          bgColor="purple.100"
-                          color="purple.500"
-                          fontSize="36px"
-                          isRound
-                          icon={<BiPlay />}
-                          type="button"
-                          onClick={() => playFn(srcUrl[1])}
-                        />
-                        <Text
-                          pos="absolute"
-                          top="-9px"
-                          right="-5px"
-                          fontSize="sm">
-                          US
-                        </Text>
-                      </Box>
-                    </SkeletonCircle>
+                    <PlayBtn
+                      loading={loading}
+                      audioLink={srcUrl[0]}
+                      country="UK"
+                    />
+                    <PlayBtn
+                      loading={loading}
+                      audioLink={srcUrl[1]}
+                      country="US"
+                    />
                   </HStack>
                 ) : (
                   <HStack>
-                    <SkeletonCircle size="10" isLoaded={!loading}>
-                      <Box pos="relative">
-                        <IconButton
-                          aria-label="play-button"
-                          border="rounded"
-                          bgColor="purple.100"
-                          color="purple.500"
-                          fontSize="36px"
-                          isRound
-                          icon={<BiPlay />}
-                          type="button"
-                          onClick={() => playFn(srcUrl[0])}
-                        />
-                        <Text
-                          pos="absolute"
-                          top="-9px"
-                          right="-5px"
-                          fontSize="sm">
-                          US
-                        </Text>
-                      </Box>
-                    </SkeletonCircle>
+                    <PlayBtn
+                      loading={loading}
+                      audioLink={srcUrl[0]}
+                      country="US"
+                    />
                   </HStack>
                 )}
               </Flex>
